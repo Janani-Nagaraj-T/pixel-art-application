@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import { PuzzleTemplate } from "../interfaces/PuzzleTemplate";
+import { StylesObj } from "../interfaces/Style";
+import { useDispatch } from "react-redux";
+import { setLevel } from "../features/gameLevel/gameLevel.ts";
+import { useNavigate } from "react-router-dom";
 
 interface PixelBoardProps {
   puzzleData: PuzzleTemplate;
   crayonColor: number;
+  level: number;
 }
 
 const PixelBoard = (props: PixelBoardProps) => {
-  const { puzzleData, crayonColor } = props;
+  const { puzzleData, crayonColor, level } = props;
   const { colorMap, template, noOfColumns, noOfRows } = puzzleData;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const initialGridState = template.reduce((acc, _, index) => {
     return { ...acc, [index]: false };
@@ -20,7 +27,13 @@ const PixelBoard = (props: PixelBoardProps) => {
 
     const onClick = () => {
       if (crayonColor === colorToUse) {
-        setGridState({ ...gridState, [index]: true });
+        const newGridState = { ...gridState, [index]: true };
+        setGridState(newGridState);
+        const isDone = !Object.values(newGridState).includes(false);
+        if (isDone) {
+          dispatch(setLevel(level + 1));
+          navigate(-1);
+        }
       }
     };
 
@@ -54,11 +67,11 @@ const PixelBoard = (props: PixelBoardProps) => {
   );
 };
 
-const Styles: Record<string, React.CSSProperties> = {
+const Styles: StylesObj = {
   pixelGrid: {
     display: "grid",
-    width: "200px",
-    height: "200px",
+    width: "250px",
+    height: "250px",
     border: "0.5px solid #000",
   },
   pixelBtn: {

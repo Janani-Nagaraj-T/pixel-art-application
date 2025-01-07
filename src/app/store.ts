@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import selectedCrayon from "../features/selectedCrayon/selectedCrayonSlice.ts";
+import gameLevel from "../features/gameLevel/gameLevel.ts";
 
 export const store = configureStore({
   reducer: {
     selectedCrayon: selectedCrayon,
+    gameLevel: gameLevel,
   },
 });
 

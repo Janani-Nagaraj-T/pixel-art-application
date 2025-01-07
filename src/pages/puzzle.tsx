@@ -5,6 +5,7 @@ import PixelBoard from "../components/pixelBoard.tsx";
 import ColorPallete from "../components/colorPallete.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store.ts";
+import { useLocation } from "react-router-dom";
 
 interface PuzzlePageProps {
   puzzleData: PuzzleTemplate;
@@ -12,16 +13,23 @@ interface PuzzlePageProps {
   levelStatus: LevelStatus;
 }
 
-const PuzzlePage: React.FC<PuzzlePageProps> = (props) => {
-  const { puzzleData, level, levelStatus } = props;
+const PuzzlePage = () => {
+  const data = useLocation().state;
+  const { puzzleData, level, levelStatus } = data;
   const selectedCrayon = useSelector(
     (state: RootState) => state.selectedCrayon
   );
   return (
     <div style={Styles.puzzlePage}>
-      <div style={Styles.banner}> Level {level} </div>
+      <div style={Styles.banner}>
+        <p style={Styles.headerTxt}> Level {level}</p>{" "}
+      </div>
       <div style={Styles.puzzleWrapper}>
-        <PixelBoard puzzleData={puzzleData} crayonColor={selectedCrayon} />
+        <PixelBoard
+          puzzleData={puzzleData}
+          crayonColor={selectedCrayon}
+          level={level}
+        />
         <ColorPallete colorMap={puzzleData.colorMap} />
       </div>
     </div>
@@ -32,26 +40,36 @@ const Styles: Record<string, React.CSSProperties> = {
   puzzlePage: {
     width: "100vw",
     height: "100vh",
+    display: "flex",
+    backgroundImage: "radial-gradient(#fffedb, #ffd0d0)",
   },
   banner: {
     width: "100%",
-    height: "3rem",
+    height: "5rem",
     fontSize: "1.5rem",
     fontWeight: "700",
     color: "#000",
     backgroundColor: "#eee",
-    position: "sticky",
+    position: "fixed",
     top: 0,
     left: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    backgroundImage: "linear-gradient(32deg, #ff9b00, #f7ff0d)",
+  },
+  headerTxt: {
+    fontSize: "3rem",
+    backgroundImage: "linear-gradient(red, blue)",
+    color: "transparent",
+    backgroundClip: "text",
+    fontFamily: "Slackey, serif",
   },
   puzzleWrapper: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "2rem",
+    margin: "auto",
   },
 };
 

@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { crayonSlection } from "../features/selectedCrayon/selectedCrayonSlice.ts";
 import { RootState } from "../app/store.ts";
+import { StylesObj } from "../interfaces/Style.ts";
 
 interface ColorPalleteProps {
   colorMap: Record<number, string>;
@@ -20,12 +21,7 @@ const ColorPallete = (props: ColorPalleteProps) => {
     return (
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gridTemplateRows: "1fr",
-          alignItems: "center",
-          justifyItems: "center",
-          height: "1.8rem",
+          ...Styles.grid,
           marginTop: selectedCrayon === colorKey ? "10px" : 0,
           marginBottom: selectedCrayon === colorKey ? "10px" : 0,
         }}
@@ -33,57 +29,67 @@ const ColorPallete = (props: ColorPalleteProps) => {
         <div
           key={`crayon-${index}`}
           style={{
-            height: "1.8rem",
-            aspectRatio: 10.1268656716,
-            maskImage: "url(crayon-mask-img.png)",
-            maskRepeat: "no-repeat",
-            WebkitMaskImage: "url(crayon-mask-img.png)",
-            maskSize: "100%",
-            maskPosition: 0,
+            ...Styles.gridItem,
             marginLeft: selectedCrayon === colorKey ? "-1.2rem" : "0rem",
-            gridRow: "1 / span 1",
-            gridColumn: "1 / span 1",
           }}
           onClick={onCrayonSelection}
         >
           <img
             src="crayon-img.png"
-            style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: color,
-            }}
+            style={{ ...Styles.crayon, backgroundColor: color }}
           />
         </div>
-        <p
-          style={{
-            fontSize: "0.8rem",
-            backgroundColor: "#5e5f65",
-            border: "1px solid #000",
-            color: "#fff",
-            borderRadius: "50%",
-            gridRow: "1 / span 1",
-            gridColumn: "1 / span 1",
-            width: "1rem",
-            height: "1rem",
-            zIndex: 1,
-          }}
-        >
-          {colorKey}
-        </p>
+        <p style={Styles.label}>{colorKey}</p>
       </div>
     );
   };
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", marginLeft: "4rem" }}
-    >
+    <div style={Styles.wrapper}>
       {Object.entries(colorMap).map(([colorKey, color], index) =>
         getCrayon(Number(colorKey), color, index)
       )}
     </div>
   );
+};
+
+const Styles: StylesObj = {
+  wrapper: { display: "flex", flexDirection: "column", marginLeft: "4rem" },
+  label: {
+    fontSize: "0.8rem",
+    backgroundColor: "#5e5f65",
+    border: "1px solid #000",
+    color: "#fff",
+    borderRadius: "50%",
+    gridRow: "1 / span 1",
+    gridColumn: "1 / span 1",
+    width: "1rem",
+    height: "1rem",
+    zIndex: 1,
+  },
+  crayon: {
+    width: "100%",
+    height: "100%",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "1fr",
+    gridTemplateRows: "1fr",
+    alignItems: "center",
+    justifyItems: "center",
+    height: "1.8rem",
+  },
+  gridItem: {
+    height: "1.8rem",
+    aspectRatio: 10.1268656716,
+    maskImage: "url(crayon-mask-img.png)",
+    maskRepeat: "no-repeat",
+    WebkitMaskImage: "url(crayon-mask-img.png)",
+    maskSize: "100%",
+    maskPosition: 0,
+    gridRow: "1 / span 1",
+    gridColumn: "1 / span 1",
+  },
 };
 
 export default ColorPallete;
